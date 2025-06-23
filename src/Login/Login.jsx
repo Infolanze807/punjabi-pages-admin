@@ -9,15 +9,40 @@ import {
 } from "@material-tailwind/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/features/authSlice";
 
 function Login() {
     const navigate = useNavigate();
     const [passwordShown, setPasswordShown] = useState(false);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    })
+    const dispatch = useDispatch();
+
+    const { loading } = useSelector((state) => state.auth)
+
     const togglePasswordVisibility = () => setPasswordShown((cur) => !cur);
 
-    const handleLogin = (e) => {
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        navigate("/business");
+
+        try {
+            console.log("form:", formData);
+            const result = await dispatch(login(formData)).unwrap();
+            console.log("Login successful:", result);
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
     };
 
     return (
@@ -38,7 +63,7 @@ function Login() {
 
                 {/* Login Form */}
                 <CardBody className="p-0">
-                    <form className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Email */}
                         <div>
                             <Typography variant="small" className="mb-1 text-gray-700 font-medium">
@@ -49,6 +74,8 @@ function Login() {
                                 variant="outlined"
                                 placeholder="name@mail.com"
                                 name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
                                 crossOrigin={undefined}
                                 className="p-2 rounded-md"
                             />
@@ -64,6 +91,8 @@ function Login() {
                                     type={passwordShown ? "text" : "password"}
                                     placeholder="********"
                                     name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
                                     crossOrigin={undefined}
                                     className="p-2 rounded-md"
                                 />
@@ -93,7 +122,7 @@ function Login() {
                         </div>
 
                         {/* Sign In Button */}
-                        <Button onClick={handleLogin} type="submit" className="bg-orange-500 hover:bg-orange-600" fullWidth>
+                        <Button type="submit" className="bg-orange-500 hover:bg-orange-600" fullWidth>
                             Sign In
                         </Button>
 
