@@ -13,6 +13,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "./redux/store";
+import { setupAxiosInterceptors } from "./redux/axiosConfig";
+
+// Set up axios interceptors with the store
+setupAxiosInterceptors(store);
 
 function App() {
   return (

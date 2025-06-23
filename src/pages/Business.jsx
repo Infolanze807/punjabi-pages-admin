@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { getBusinessCategory } from "../redux/features/businessSlice";
 
 const initialBusinesses = [
   { name: "Acme Corporation", industry: "Technology", employees: 250, revenue: "$5.4M", status: "Active" },
@@ -11,6 +13,16 @@ const initialBusinesses = [
 ];
 
 function Business() {
+  const dispatch = useDispatch();
+
+  const { BusinessCategory } = useSelector((state) => state.business);
+  console.log("BusinessCategory", BusinessCategory);
+
+
+  useEffect(() => {
+    dispatch(getBusinessCategory({ keyword: "", page: 1, status: true }));
+  }, [dispatch]);
+
   const [businesses] = useState(initialBusinesses);
   const [activeTab, setActiveTab] = useState("overview");
   const [filter, setFilter] = useState("Active");
@@ -207,7 +219,7 @@ function Business() {
                     <p><strong>Description:</strong> {selectedBusiness.description}</p>
                     <p><strong>Promotions:</strong> {selectedBusiness.promotions}</p>
                   </div>
-                </> 
+                </>
               )}
 
               {/* Address */}

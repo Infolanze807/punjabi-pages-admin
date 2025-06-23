@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axiosConfig from "../axiosConfig";
 
 export const login = createAsyncThunk("auth/login", async (loginData) => {
+  const axiosConfig = (await import("../axiosConfig")).default;
   try {
     const response = await axiosConfig.post("auth/login", loginData);
     return response.data;

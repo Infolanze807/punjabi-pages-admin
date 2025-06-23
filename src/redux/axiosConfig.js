@@ -1,5 +1,5 @@
 import axios from "axios";
-import { store } from "./store";
+// import { store } from "./store";
 
 const axiosConfig = axios.create({
   baseURL: "https://punjabipages-backend.vercel.app/api/",
@@ -8,19 +8,20 @@ const axiosConfig = axios.create({
   },
 });
 
-axiosConfig.interceptors.request.use(
-  (config) => {
-    const state = store.getState();
-    const token = state.auth.token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// Export a function to set up interceptors with the store
+export function setupAxiosInterceptors(store) {
+  axiosConfig.interceptors.request.use(
+    (config) => {
+      const state = store.getState();
+      const token = state.auth.token;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+}
 
 axiosConfig.interceptors.response.use(
   (response) => {
