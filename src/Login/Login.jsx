@@ -89,26 +89,26 @@ function Login() {
                             <div className="relative">
                                 <Input
                                     type={passwordShown ? "text" : "password"}
-                                    placeholder="********"
                                     name="password"
+                                    placeholder="********"
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     crossOrigin={undefined}
                                     className="p-2 rounded-md"
                                 />
-                                <IconButton
-                                    variant="text"
-                                    size="sm"
+                                <button
+                                    type="button"
                                     onClick={togglePasswordVisibility}
-                                    className="!absolute right-8 top-5"
+                                    className="absolute right-3 top-2/4 -translate-y-1/2"
                                 >
                                     {passwordShown ? (
                                         <EyeIcon className="h-5 w-5 text-gray-600" />
                                     ) : (
                                         <EyeSlashIcon className="h-5 w-5 text-gray-600" />
                                     )}
-                                </IconButton>
+                                </button>
                             </div>
+
                         </div>
 
                         {/* Forgot Password */}
@@ -122,8 +122,38 @@ function Login() {
                         </div>
 
                         {/* Sign In Button */}
-                        <Button type="submit" className="bg-orange-500 hover:bg-orange-600" fullWidth>
-                            Sign In
+                        <Button
+                            type="submit"
+                            className="bg-orange-500 hover:bg-orange-600 flex items-center justify-center"
+                            fullWidth
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <span className="flex items-center gap-2">
+                                    <svg
+                                        className="animate-spin h-4 w-4 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                        ></path>
+                                    </svg>
+                                </span>
+                            ) : (
+                                "Sign In"
+                            )}
                         </Button>
 
                         {/* Divider */}

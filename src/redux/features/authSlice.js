@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 export const login = createAsyncThunk("auth/login", async (loginData) => {
   const axiosConfig = (await import("../axiosConfig")).default;
@@ -37,15 +38,31 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.message = action.payload.message;
+        const { user, token, message } = action.payload;
+        // state.user = action.payload.user;
+        // state.token = action.payload.token;
+        // state.isAuthenticated = true;
+        // state.message = action.payload.message;
+        // toast.success(state.message);
+        if (user.role === "admin") {
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          state.isAuthenticated = true;
+          state.message = action.payload.message;
+          toast.success(state.message);
+        } else {
+          state.user = null;
+          state.token = null;
+          state.isAuthenticated = false;
+          state.message = null;
+          toast.error("Access denied: Role is not admin");
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.error = action.error.message;
+        toast.error(state.error);
       });
   },
 });
