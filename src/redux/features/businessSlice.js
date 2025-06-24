@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosConfig from "../axiosConfig";
+import { toast } from "react-toastify";
 
 // Async Thunk
 export const getBusinessCategory = createAsyncThunk(
@@ -22,12 +23,27 @@ export const getBusinessCategory = createAsyncThunk(
   }
 );
 
+export const statusBussiness = createAsyncThunk(
+  "business/statusBussiness",
+  async ({ bussinessId, statusData }) => {
+    try {
+      const response = await axiosConfig.patch(`admin/status/${bussinessId}`,statusData);
+      return response.data;
+    } catch (error) {
+      throw (
+        error.response?.data?.error || error.message || "Something went wrong"
+      );
+    }
+  }
+);
+
 // Slice
 const businessSlice = createSlice({
   name: "business",
   initialState: {
     BusinessCategory: [],
     loading: false,
+    loading2:false,
     error: null,
     message: null,
   },
@@ -46,7 +62,24 @@ const businessSlice = createSlice({
       .addCase(getBusinessCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch data";
-      });
+      })
+      .addCase(statusBussiness.pending, (state) => {
+        state.loading = true;
+        state.loading2 = true;
+      })
+      .addCase(statusBussiness.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loading2 = false;
+        state.updateBussiness = action.payload;
+        state.message = action.payload.message;
+        toast.success(action.payload.message);
+      })
+      .addCase(statusBussiness.rejected, (state, action) => {
+        state.loading = false;
+        state.loading2 = false;
+        state.error = action.error.message;
+        toast.error(state.error);
+      })
   },
 });
 
