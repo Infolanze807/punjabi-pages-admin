@@ -18,45 +18,62 @@ const users = [
 
 function Users() {
   return (
-    <div className="bg-[#f9fafb] p-4 md:p-6  min-h-screen">
-      <div className="flex items-center justify-between mb-6 bg-white shadow-xl rounded-lg p-3 px-5">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
-          <p className="text-sm text-gray-500">Manage platform users and their roles.</p>
+    <div className="bg-gradient-to-br from-slate-50 to-purple-50 p-6 min-h-screen">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">User Management</h2>
+              <p className="text-slate-600">Manage platform users and their roles.</p>
+            </div>
+            <button className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2.5 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 font-medium shadow-md hover:shadow-lg">
+              <FiUserPlus className="text-sm" />
+              <span className="text-sm">Add User</span>
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="bg-white shadow-xl rounded-lg p-3 px-5">
-        <div className="overflow-x-auto bg-white shadow rounded-md mt-5">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">Name</th>
-                <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">Email</th>
-                <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">Role</th>
-                <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {users.map((user, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition duration-150">
-                  <td className="px-6 py-3 whitespace-nowrap font-medium text-gray-800">{user.name}</td>
-                  <td className="px-6 py-3 whitespace-nowrap text-gray-600">{user.email}</td>
-                  <td className="px-6 py-3 whitespace-nowrap text-gray-600">{user.role}</td>
-                  <td className="px-6 py-3">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
-                    ${user.status === "Active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                        }`}
-                    >
-                      {user.status}
-                    </span>
-                  </td>
+        
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-slate-100 to-purple-50">
+                <tr>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">Name</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">Email</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">Role</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {users.map((user, index) => (
+                  <tr key={index} className="hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-200 group">
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-800 group-hover:text-slate-900">{user.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-600 group-hover:text-slate-700">{user.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                        user.role === "Admin" ? "bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border-purple-300" :
+                        user.role === "Editor" ? "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border-blue-300" :
+                        "bg-gradient-to-r from-slate-100 to-slate-200 text-slate-800 border-slate-300"
+                      }`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border
+                        ${user.status === "Active"
+                            ? "bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-green-300"
+                            : "bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border-orange-300"
+                          }`}
+                      >
+                        {user.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

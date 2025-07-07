@@ -46,14 +46,14 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <section className="w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-md px-6 py-8">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+            <section className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 px-8 py-10">
                 {/* Logo and Welcome */}
-                <div className="text-center mb-6">
-                    <div className="flex items-center justify-center gap-3 mb-2">
-                        <img src={logo} alt="Punjabi Pages" className="w-12 h-12" />
-                        <Typography variant="h4" className="font-bold text-orange-500">
-                            Punjabi Pages
+                <div className="text-center mb-8">
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                        <img src={logo} alt="Punjabi Pages" className="w-12 h-12 rounded-xl object-cover shadow-sm border-2 border-white" />
+                        <Typography variant="h4" className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            Punjabi Pages Admin
                         </Typography>
                     </div>
                     <Typography variant="paragraph" className="text-gray-600">
@@ -66,7 +66,7 @@ function Login() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Email */}
                         <div>
-                            <Typography variant="small" className="mb-1 text-gray-700 font-medium">
+                            <Typography variant="small" className="mb-2 text-gray-700 font-medium">
                                 Email Address
                             </Typography>
                             <Input
@@ -77,13 +77,13 @@ function Login() {
                                 value={formData.email}
                                 onChange={handleInputChange}
                                 crossOrigin={undefined}
-                                className="p-2 rounded-md"
+                                className="p-3 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
 
                         {/* Password */}
                         <div>
-                            <Typography variant="small" className="mb-1 text-gray-700 font-medium">
+                            <Typography variant="small" className="mb-2 text-gray-700 font-medium">
                                 Password
                             </Typography>
                             <div className="relative">
@@ -94,28 +94,27 @@ function Login() {
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     crossOrigin={undefined}
-                                    className="p-2 rounded-md"
+                                    className="p-3 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 pr-12"
                                 />
                                 <button
                                     type="button"
                                     onClick={togglePasswordVisibility}
-                                    className="absolute right-3 top-2/4 -translate-y-1/2"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                                 >
                                     {passwordShown ? (
-                                        <EyeIcon className="h-5 w-5 text-gray-600" />
+                                        <EyeIcon className="h-5 w-5" />
                                     ) : (
-                                        <EyeSlashIcon className="h-5 w-5 text-gray-600" />
+                                        <EyeSlashIcon className="h-5 w-5" />
                                     )}
                                 </button>
                             </div>
-
                         </div>
 
                         {/* Forgot Password */}
                         <div className="flex justify-end">
                             <Link
                                 to="/"
-                                className="text-sm text-blue-500 hover:text-blue-700 font-medium"
+                                className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
                             >
                                 Forgot password?
                             </Link>
@@ -124,32 +123,14 @@ function Login() {
                         {/* Sign In Button */}
                         <Button
                             type="submit"
-                            className="bg-orange-500 hover:bg-orange-600 flex items-center justify-center"
+                            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center justify-center py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
                             fullWidth
                             disabled={loading}
                         >
                             {loading ? (
                                 <span className="flex items-center gap-2">
-                                    <svg
-                                        className="animate-spin h-4 w-4 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        ></circle>
-                                        <path
-                                            className="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                                        ></path>
-                                    </svg>
+                                    <div className="spinner"></div>
+                                    <span>Signing in...</span>
                                 </span>
                             ) : (
                                 "Sign In"
@@ -157,18 +138,18 @@ function Login() {
                         </Button>
 
                         {/* Divider */}
-                        <div className="flex items-center gap-4 my-4">
-                            <div className="flex-1 h-px bg-gray-300"></div>
-                            <Typography variant="small" color="gray">
+                        <div className="flex items-center gap-4 my-6">
+                            <div className="flex-1 h-px bg-gray-200"></div>
+                            <Typography variant="small" color="gray" className="px-2">
                                 OR
                             </Typography>
-                            <div className="flex-1 h-px bg-gray-300"></div>
+                            <div className="flex-1 h-px bg-gray-200"></div>
                         </div>
 
                         {/* Sign Up Link */}
                         <Typography color="gray" className="text-center text-sm">
                             Don&apos;t have an account?{" "}
-                            <Link to="/" className="font-medium text-orange-500 hover:text-orange-600">
+                            <Link to="/" className="font-medium text-blue-600 hover:text-blue-700 transition-colors duration-200">
                                 Sign Up
                             </Link>
                         </Typography>

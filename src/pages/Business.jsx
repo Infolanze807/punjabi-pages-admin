@@ -87,10 +87,10 @@ function Business() {
   const TabButton = ({ id, label, activeTab, setActiveTab }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`px-4 py-2 rounded-t-md text-sm font-medium transition duration-200
+      className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 border
       ${activeTab === id
-          ? "bg-white border border-b-transparent border-gray-300 text-blue-600 shadow-sm"
-          : "bg-gray-100 text-gray-600 hover:text-blue-600 hover:bg-white"
+          ? "bg-blue-50 text-blue-700 border-blue-200 shadow-sm"
+          : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900"
         }`}
     >
       {label}
@@ -115,115 +115,143 @@ function Business() {
   };
 
   return (
-    <div className="bg-[#f9fafb] p-4 md:p-6 min-h-screen">
-      <div className="">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 gap-4 bg-white shadow-xl rounded-lg p-3 px-5">
-          {/* Title & Subtitle */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              Business Overview
-            </h2>
-            <p className="text-sm text-gray-500">
-              Manage and track all registered business records.
-            </p>
-          </div>
+    <div className="bg-gradient-to-br from-slate-50 to-blue-50 p-6 min-h-screen">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            {/* Title & Subtitle */}
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                Business Overview
+              </h2>
+              <p className="text-slate-600">
+                Manage and track all registered business records.
+              </p>
+            </div>
 
-          {/* Search Bar */}
-          <div className="flex items-center gap-2 w-full lg:w-auto">
-            <input
-              type="text"
-              placeholder="Search businesses..."
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="flex-1 lg:flex-none px-4 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={handleSearch}
-              className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
-            >
-              <FaSearch className="text-sm" />
-              <span className="text-sm font-medium">Search</span>
-            </button>
+            {/* Search Bar */}
+            <div className="flex items-center gap-3 w-full lg:w-auto">
+              <div className="relative flex-1 lg:flex-none">
+                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search businesses..."
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  className="w-full lg:w-80 pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                />
+              </div>
+              <button
+                onClick={handleSearch}
+                className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+              >
+                <FaSearch className="text-sm" />
+                <span className="text-sm">Search</span>
+              </button>
+            </div>
           </div>
         </div>
-        <div className="bg-white shadow-xl rounded-lg p-3 px-5">
-          <div className="mb-4 flex gap-3 mt-4">
-            {Object.keys(statusMap).map((label) => (
-              <button
-                key={label}
-                onClick={() => setStatus(statusMap[label])}
-                className={`px-3.5 py-1 text-sm font-medium rounded-md border transition
-        ${status === statusMap[label]
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-600 border-gray-300 hover:bg-blue-100"
-                  }`}
-              >
-                {label}
-              </button>
-            ))}
+
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+          <div className="p-6 border-b border-slate-100 bg-white">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-slate-700">Filter by status:</span>
+              {Object.keys(statusMap).map((label) => (
+                <button
+                  key={label}
+                  onClick={() => setStatus(statusMap[label])}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border
+                  ${status === statusMap[label]
+                      ? "bg-blue-100 text-blue-800 border-blue-300 shadow-sm"
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300"
+                    }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center h-[50vh]">
+            <div className="flex items-center justify-center h-64">
               <FullPageLoader />
             </div>
           ) : (
-            <div className="overflow-x-auto bg-white shadow rounded-md">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
-                <thead className="bg-gray-100">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-50">
                   <tr>
-                    <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">
-                      Bussiness Name
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                      Index
                     </th>
-                    <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">
+                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                      Business Name
+                    </th>
+                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Category
                     </th>
-                    <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">
+                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Sub Category
                     </th>
-                    <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">
+                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Email
                     </th>
-                    <th className="px-6 py-2.5 text-left font-bold text-gray-600 tracking-wider">
+                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Action
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-slate-100">
                   {businesses?.map((biz, index) => (
                     <tr
                       key={index}
-                      className="hover:bg-gray-50 transition duration-150"
+                      className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
                     >
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                        {index + 1}
+                      </td>
                       <td
-                        className="px-6 py-3 whitespace-nowrap text-blue-600 font-medium cursor-pointer hover:underline"
+                        className="px-6 py-4 whitespace-nowrap text-blue-600 font-medium cursor-pointer hover:underline group-hover:text-blue-700"
                         onClick={() => handleNameClick(biz)}
                       >
                         {biz.businessName}
                       </td>
-                      <td className="px-6 py-3 whitespace-nowrap text-gray-600">
-                        {biz.category}
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border border-blue-200">
+                          {biz.category}
+                        </span>
                       </td>
-                      <td className="px-6 py-3 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
                         {biz.subCategory}
                       </td>
-                      <td className="px-6 py-3 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
                         {biz.email}
                       </td>
-                      <td className="px-6 py-3 whitespace-nowrap text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
                         <input
                           type="checkbox"
                           checked={biz.status}
                           onClick={(e) => handleCheckboxClick(e, biz)}
                           readOnly
+                          className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 hover:bg-blue-50 transition-colors duration-200"
                         />
                       </td>
                     </tr>
                   ))}
                   {businesses?.length === 0 && (
                     <tr>
-                      <td colSpan="5" className="text-center py-6 text-gray-400">
-                        No businesses found.
+                      <td colSpan="5" className="text-center py-12 text-slate-500">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center">
+                            <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-medium text-slate-900">No businesses found</h3>
+                            <p className="text-slate-500">Try adjusting your search criteria</p>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -235,49 +263,79 @@ function Business() {
 
         {/* Modal */}
         {selectedBusiness && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative">
-              <button
-                onClick={closeModal}
-                className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
-              >
-                ×
-              </button>
-              <div className="mb-5">
-                <div className="flex items-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-scale-in">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  {selectedBusiness.logoUrl && (
+                    <img
+                      src={selectedBusiness.logoUrl}
+                      alt="Business Logo"
+                      className="w-16 h-16 rounded-xl object-cover border-2 border-slate-200 shadow-sm"
+                    />
+                  )}
                   <div>
-                    {selectedBusiness.logoUrl && (
-                      <img
-                        src={selectedBusiness.logoUrl}
-                        alt="Business Logo"
-                        className="w-24 h-24 object-contain mb-4"
-                      />
-                    )}
+                    <h2 className="text-2xl font-bold text-slate-900">
+                      {selectedBusiness.businessName}
+                    </h2>
+                    <p className="text-slate-600">{selectedBusiness.category} • {selectedBusiness.subCategory}</p>
                   </div>
-                  <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                    {selectedBusiness.businessName}
-                  </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-                  <p>
-                    <strong>contactPerson:</strong>{" "}
-                    {selectedBusiness.contactPerson}
-                  </p>
-                  <p>
-                    <strong>email:</strong> {selectedBusiness.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {selectedBusiness.phone}
-                  </p>
-                  <p>
-                    <strong>Category:</strong> {selectedBusiness.category}
-                  </p>
-                  <p>
-                    <strong>Sub-category:</strong> {selectedBusiness.subCategory}
-                  </p>
+                <button
+                  onClick={closeModal}
+                  className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
+                    <h3 className="font-semibold text-slate-900 mb-3">Contact Information</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Contact Person:</span>
+                        <span className="font-medium text-slate-800">{selectedBusiness.contactPerson}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Email:</span>
+                        <span className="font-medium text-slate-800">{selectedBusiness.email}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Phone:</span>
+                        <span className="font-medium text-slate-800">{selectedBusiness.phone}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
+                    <h3 className="font-semibold text-slate-900 mb-3">Business Details</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">ABN:</span>
+                        <span className="font-medium text-slate-800">{selectedBusiness.abn}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Established:</span>
+                        <span className="font-medium text-slate-800">{selectedBusiness.establishedYear}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Website:</span>
+                        <a href={selectedBusiness.website} target="_blank" rel="noreferrer" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                          {selectedBusiness.website}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 border-b">
+
+              <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-4 mb-6">
                 <TabButton
                   id="overview"
                   label="Overview"
@@ -310,227 +368,90 @@ function Business() {
                 />
               </div>
 
-              {/* Logo */}
-              <div className="p-6 text-sm text-gray-700">
+              {/* Tab Content */}
+              <div className="space-y-6">
                 {activeTab === "overview" && (
-                  <>
-                    {/* Info Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-                      <p>
-                        <strong>ABN:</strong> {selectedBusiness.abn}
-                      </p>
-                      <p>
-                        <strong>Established:</strong>{" "}
-                        {selectedBusiness.establishedYear}
-                      </p>
-                      <p>
-                        <strong>Website:</strong>{" "}
-                        <a
-                          className="text-blue-600 underline"
-                          href={selectedBusiness.website}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {selectedBusiness.website}
-                        </a>
-                      </p>
-                      <p>
-                        <strong>Description:</strong>{" "}
+                  <div className="space-y-4">
+                    <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
+                      <h3 className="font-semibold text-slate-900 mb-3">Description</h3>
+                      <p className="text-sm text-slate-700 leading-relaxed">
                         {selectedBusiness.description}
                       </p>
-                      <p>
-                        <strong>Promotions:</strong> {selectedBusiness.promotions}
+                    </div>
+                    
+                    <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
+                      <h3 className="font-semibold text-slate-900 mb-3">Promotions</h3>
+                      <p className="text-sm text-slate-700 leading-relaxed">
+                        {selectedBusiness.promotions}
                       </p>
                     </div>
-                  </>
+                  </div>
                 )}
 
-                {/* Address */}
                 {activeTab === "address" && (
-                  <div className="space-y-6 mt-4">
-                    {/* Address */}
-                    <div>
-                      <h3 className="font-semibold text-gray-800">Address</h3>
-                      <p className="text-gray-600 text-sm">
-                        {selectedBusiness.address?.street},{" "}
-                        {selectedBusiness.address?.suburb},{" "}
-                        {selectedBusiness.address?.state}{" "}
-                        {selectedBusiness.address?.postcode}
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
+                      <h3 className="font-semibold text-slate-900 mb-3">Address</h3>
+                      <p className="text-sm text-slate-700">
+                        {selectedBusiness.address?.street}, {selectedBusiness.address?.suburb}, {selectedBusiness.address?.state} {selectedBusiness.address?.postcode}
                       </p>
                     </div>
 
-                    {/* Social Links */}
-                    <div>
-                      <h3 className="font-semibold text-gray-800">
-                        Social Links
-                      </h3>
-                      <div className="flex gap-4 text-blue-600 text-sm underline">
+                    <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
+                      <h3 className="font-semibold text-slate-900 mb-3">Social Links</h3>
+                      <div className="flex gap-4">
                         {selectedBusiness.socialLinks?.facebook && (
-                          <a
-                            href={selectedBusiness.socialLinks.facebook}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                          <a href={selectedBusiness.socialLinks.facebook} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
                             Facebook
                           </a>
                         )}
                         {selectedBusiness.socialLinks?.instagram && (
-                          <a
-                            href={selectedBusiness.socialLinks.instagram}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                          <a href={selectedBusiness.socialLinks.instagram} target="_blank" rel="noreferrer" className="text-pink-600 hover:text-pink-700 text-sm font-medium">
                             Instagram
                           </a>
                         )}
                         {selectedBusiness.socialLinks?.linkedin && (
-                          <a
-                            href={selectedBusiness.socialLinks.linkedin}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
+                          <a href={selectedBusiness.socialLinks.linkedin} target="_blank" rel="noreferrer" className="text-blue-700 hover:text-blue-800 text-sm font-medium">
                             LinkedIn
                           </a>
                         )}
                       </div>
                     </div>
-
-                    {/* Service Areas */}
-                    <div>
-                      <h3 className="font-semibold text-gray-800">
-                        Service Areas
-                      </h3>
-                      {selectedBusiness.serviceAreas?.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                          {selectedBusiness.serviceAreas.map((area, idx) => (
-                            <span
-                              key={idx}
-                              className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full"
-                            >
-                              {area}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-gray-500 text-sm">
-                          No service areas available.
-                        </p>
-                      )}
-                    </div>
                   </div>
                 )}
 
-                {/* Gallery */}
+                {/* Add other tab contents as needed */}
                 {activeTab === "gallery" && (
-                  <div className="space-y-6">
-                    {/* Gallery Images */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                        Gallery
-                      </h3>
-                      {selectedBusiness.gallery?.length > 0 ? (
-                        <div className="flex flex-wrap gap-4">
-                          {selectedBusiness.gallery.map((url, index) => (
-                            <img
-                              key={index}
-                              src={url}
-                              alt={`Gallery ${index}`}
-                              className="w-32 h-24 object-cover rounded shadow"
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-gray-500">
-                          No gallery images available.
-                        </p>
-                      )}
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
                     </div>
-
-                    {/* Intro Video */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                        Intro Video
-                      </h3>
-                      {selectedBusiness.introVideo ? (
-                        <iframe
-                          src={selectedBusiness.introVideo}
-                          title="Intro Video"
-                          className="w-full h-64 rounded shadow"
-                          frameBorder="0"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <p className="text-gray-500">No intro video available.</p>
-                      )}
-                    </div>
+                    <p className="text-slate-600">Gallery content will be displayed here</p>
                   </div>
                 )}
 
-                {/* Keywords */}
                 {activeTab === "keywords" && (
-                  <>
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                        Keyword
-                      </h3>
-                      {selectedBusiness.keywords?.length > 0 ? (
-                        <div className="flex flex-wrap gap-2 mt-4">
-                          {selectedBusiness.keywords.map((kw, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2 py-1 bg-gray-200 rounded"
-                            >
-                              {kw}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <p>No keywords available.</p>
-                      )}
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                      </svg>
                     </div>
-                  </>
+                    <p className="text-slate-600">Keywords content will be displayed here</p>
+                  </div>
                 )}
 
-                {/* Payment Methods */}
                 {activeTab === "payment" && (
-                  <>
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                        Payment Methods
-                      </h3>
-                      {selectedBusiness.paymentMethods?.length > 0 ? (
-                        <div className="mt-4">
-                          <ul className="list-disc list-inside text-sm text-gray-600">
-                            {selectedBusiness.paymentMethods.map((method, i) => (
-                              <li key={i}>{method}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : (
-                        <p className="text-gray-500 text-sm">No Paymethod Add</p>
-                      )}
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
                     </div>
-
-                    {/* Certifications */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-800 mb-2 mt-5">
-                        Certifications
-                      </h3>
-                      {selectedBusiness.certifications?.length > 0 ? (
-                        <div className="mt-4">
-                          <ul className="list-disc list-inside text-sm text-gray-600">
-                            {selectedBusiness.certifications.map((cert, i) => (
-                              <li key={i}>{cert}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : (
-                        <p className="text-gray-500 text-sm">
-                          No Certification Add
-                        </p>
-                      )}
-                    </div>
-                  </>
+                    <p className="text-slate-600">Payment & certifications content will be displayed here</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -539,33 +460,42 @@ function Business() {
 
         {/* Checkbox Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-sm">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800">
-                Confirm Status Change
-              </h2>
-              <p className="text-sm text-gray-600 mb-6">
-                Are you sure you want to{" "}
-                {data?.status ? "deactivate" : "activate"} this business?
-              </p>
-              <div className="flex justify-end space-x-3">
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 text-sm rounded-md bg-gray-300 hover:bg-gray-400 text-gray-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleVerify}
-                  disabled={loading2}
-                  className={`px-4 py-2 text-sm rounded-md text-white transition 
-                ${loading2
-                      ? "bg-blue-400"
-                      : "bg-blue-600 hover:bg-blue-700"
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-in">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  {data?.status ? "Deactivate Business?" : "Activate Business?"}
+                </h3>
+                <p className="text-slate-600 mb-6">
+                  Are you sure you want to {data?.status ? "deactivate" : "activate"} <strong>{data?.businessName}</strong>?
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleCancel}
+                    className="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors duration-200 font-medium"
+                    disabled={loading2}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleVerify}
+                    className={`flex-1 px-4 py-2.5 text-white rounded-xl font-medium transition-colors duration-200 ${
+                      data?.status ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
                     }`}
-                >
-                  {loading2 ? "Loading..." : "Confirm"}
-                </button>
+                    disabled={loading2}
+                  >
+                    {loading2 ? (
+                      <div className="spinner mx-auto"></div>
+                    ) : (
+                      `${data?.status ? "Deactivate" : "Activate"}`
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

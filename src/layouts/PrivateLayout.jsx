@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import { selectIsAuthenticated } from '../redux/features/authSlice';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
+import Sidebar from '../components/Sidebar.jsx';
+import Header from '../components/Header.jsx';
 
 const PrivateLayout = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
