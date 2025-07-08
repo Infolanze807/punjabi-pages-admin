@@ -30,6 +30,7 @@ function Business() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState(null);
   const [loading2, setLoading2] = useState(false);
+  const [hoveredBizId, setHoveredBizId] = useState(null);
 
   const handleCheckboxClick = (e, biz) => {
     e.preventDefault();
@@ -181,22 +182,22 @@ function Business() {
               <table className="w-full">
                 <thead className="bg-slate-50">
                   <tr>
-                  <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
-                      Index
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                      No.
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                    <th className="px-3 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Business Name
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Category
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                    <th className="px-2 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Sub Category
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Email
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                    <th className="px-6 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Action
                     </th>
                   </tr>
@@ -204,30 +205,37 @@ function Business() {
                 <tbody className="divide-y divide-slate-100">
                   {businesses?.map((biz, index) => (
                     <tr
-                      key={index}
+                      key={biz._id || index}
                       className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                      <td className="px-4 py-4 whitespace-nowrap text-slate-600">
                         {index + 1}
                       </td>
                       <td
-                        className="px-6 py-4 whitespace-nowrap text-blue-600 font-medium cursor-pointer hover:underline group-hover:text-blue-700"
+                        className="relative px-3 py-4 whitespace-nowrap text-blue-600 font-medium cursor-pointer hover:underline group-hover:text-blue-700"
                         onClick={() => handleNameClick(biz)}
+                        onMouseEnter={() => setHoveredBizId(biz._id || index)}
+                        onMouseLeave={() => setHoveredBizId(null)}
                       >
                         {biz.businessName}
+                        {hoveredBizId === (biz._id || index) && (
+                          <div className="absolute left-1/2 bottom-10 z-10 mt-2 -translate-x-1/2 bg-white border border-gray-200 shadow-lg rounded px-3 py-1 text-xs text-gray-700 whitespace-nowrap">
+                            View Detail
+                          </div>
+                        )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                      <td className="px-4 py-4 whitespace-nowrap text-slate-600">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border border-blue-200">
                           {biz.category}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                      <td className="px-2 py-4 whitespace-nowrap text-slate-600">
                         {biz.subCategory}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                      <td className="px-4 py-4 whitespace-nowrap text-slate-600">
                         {biz.email}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-600">
+                      <td className="py-4 whitespace-nowrap text-slate-600 text-center">
                         <input
                           type="checkbox"
                           checked={biz.status}

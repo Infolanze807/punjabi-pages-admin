@@ -9,7 +9,7 @@ import { logout } from "../redux/features/authSlice";
 
 const navItems = [
   { name: "Business", to: "/business", icon: <FaBuilding /> },
-  { name: "Users", to: "/users", icon: <FaUsers /> },
+  // { name: "Users", to: "/users", icon: <FaUsers /> },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -99,9 +99,9 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
           
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex items-center justify-between text-xs text-gray-400">
-              <span>Version 2.1.0</span>
-              <span>© 2024</span>
+            <div className="flex items-center justify-end text-xs text-gray-400">
+              {/* <span>Version 2.1.0</span> */}
+              <span>© 2025</span>
             </div>
           </div>
         </div>
