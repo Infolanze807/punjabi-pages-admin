@@ -3,6 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  featureBussiness,
   getBusinessCategory,
   statusBussiness,
 } from "../redux/features/businessSlice";
@@ -31,6 +32,9 @@ function Business() {
   const [data, setData] = useState(null);
   const [loading2, setLoading2] = useState(false);
   const [hoveredBizId, setHoveredBizId] = useState(null);
+  const [featureModalOpen, setFeatureModalOpen] = useState(false);
+  const [selectedFeatureBiz, setSelectedFeatureBiz] = useState(null);
+
 
   const handleCheckboxClick = (e, biz) => {
     e.preventDefault();
@@ -85,6 +89,13 @@ function Business() {
     setIsModalOpen(false);
   };
 
+  const handleFeatureToggle = (biz) => {
+    setSelectedFeatureBiz(biz);
+    setFeatureModalOpen(true);
+  };
+
+
+
   const TabButton = ({ id, label, activeTab, setActiveTab }) => (
     <button
       onClick={() => setActiveTab(id)}
@@ -114,6 +125,33 @@ function Business() {
   const closeModal = () => {
     setSelectedBusiness(null);
   };
+
+  const confirmFeatureToggle = async () => {
+    if (!selectedFeatureBiz) return;
+
+    const featurePayload = { isFeature: !selectedFeatureBiz.isFeature };
+    try {
+      const resultAction = await dispatch(
+        featureBussiness({
+          bussinessId: selectedFeatureBiz._id,
+          featureData: featurePayload,
+        })
+      );
+
+      if (featureBussiness.fulfilled.match(resultAction)) {
+        dispatch(getBusinessCategory({ keyword, page: 1, status }));
+      } else {
+        console.error("Feature update failed:", resultAction.error.message);
+      }
+    } catch (err) {
+      console.error("Feature API error:", err);
+    } finally {
+      setFeatureModalOpen(false);
+      setSelectedFeatureBiz(null);
+    }
+  };
+
+
 
   return (
     <div className="bg-gradient-to-br from-slate-50 to-blue-50 p-6 min-h-screen">
@@ -182,7 +220,7 @@ function Business() {
               <table className="w-full">
                 <thead className="bg-slate-50">
                   <tr>
-                  <th className="px-4 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       No.
                     </th>
                     <th className="px-3 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
@@ -200,6 +238,12 @@ function Business() {
                     <th className="px-6 py-3 text-left font-semibold text-slate-700 text-sm uppercase tracking-wider border-b border-slate-200">
                       Action
                     </th>
+                    {status && (
+                      <th className="px-6 py-3 text-left font-semibold text-slate-700 text-sm tracking-wider border-b border-slate-200">
+                        Feature
+                      </th>
+                    )}
+
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -235,7 +279,7 @@ function Business() {
                       <td className="px-4 py-4 whitespace-nowrap text-slate-600">
                         {biz.email}
                       </td>
-                      <td className="py-4 whitespace-nowrap text-slate-600 text-center">
+                      <td className="py-2 whitespace-nowrap text-slate-600 text-center">
                         <input
                           type="checkbox"
                           checked={biz.status}
@@ -244,6 +288,21 @@ function Business() {
                           className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 hover:bg-blue-50 transition-colors duration-200"
                         />
                       </td>
+                      {status && (
+                        <td className="py-4 whitespace-nowrap text-slate-600 text-center">
+                          <input
+                            type="checkbox"
+                            checked={biz.isFeature}
+                            onClick={(e) => {
+                              e.preventDefault(); 
+                              handleFeatureToggle(biz);
+                            }}
+                            readOnly
+                            className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 hover:bg-blue-50 transition-colors duration-200"
+                          />
+                        </td>
+                      )}
+
                     </tr>
                   ))}
                   {businesses?.length === 0 && (
@@ -319,7 +378,7 @@ function Business() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
                     <h3 className="font-semibold text-slate-900 mb-3">Business Details</h3>
@@ -386,7 +445,7 @@ function Business() {
                         {selectedBusiness.description}
                       </p>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200">
                       <h3 className="font-semibold text-slate-900 mb-3">Promotions</h3>
                       <p className="text-sm text-slate-700 leading-relaxed">
@@ -492,9 +551,8 @@ function Business() {
                   </button>
                   <button
                     onClick={handleVerify}
-                    className={`flex-1 px-4 py-2.5 text-white rounded-xl font-medium transition-colors duration-200 ${
-                      data?.status ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
-                    }`}
+                    className={`flex-1 px-4 py-2.5 text-white rounded-xl font-medium transition-colors duration-200 ${data?.status ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
+                      }`}
                     disabled={loading2}
                   >
                     {loading2 ? (
@@ -508,6 +566,48 @@ function Business() {
             </div>
           </div>
         )}
+
+        {featureModalOpen && selectedFeatureBiz && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-in">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  {selectedFeatureBiz.isFeature ? "Unfeature Business?" : "Feature Business?"}
+                </h3>
+                <p className="text-slate-600 mb-6">
+                  Are you sure you want to {selectedFeatureBiz.isFeature ? "unfeature" : "feature"} <strong>{selectedFeatureBiz.businessName}</strong>? <br />
+                  <span className="italic text-sm text-slate-500">(dashboard view)</span>
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setFeatureModalOpen(false);
+                      setSelectedFeatureBiz(null);
+                    }}
+                    className="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors duration-200 font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmFeatureToggle}
+                    className={`flex-1 px-4 py-2.5 text-white rounded-xl font-medium transition-colors duration-200 ${selectedFeatureBiz.isFeature
+                      ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
+                      : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
+                      }`}
+                  >
+                    {selectedFeatureBiz.isFeature ? "Unfeature" : "Feature"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

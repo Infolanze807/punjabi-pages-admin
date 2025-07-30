@@ -27,7 +27,27 @@ export const statusBussiness = createAsyncThunk(
   "business/statusBussiness",
   async ({ bussinessId, statusData }) => {
     try {
-      const response = await axiosConfig.patch(`admin/status/${bussinessId}`,statusData);
+      const response = await axiosConfig.patch(
+        `admin/status/${bussinessId}`,
+        statusData
+      );
+      return response.data;
+    } catch (error) {
+      throw (
+        error.response?.data?.error || error.message || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const featureBussiness = createAsyncThunk(
+  "business/featureBussiness",
+  async ({ bussinessId, featureData }) => {
+    try {
+      const response = await axiosConfig.patch(
+        `admin/feature/${bussinessId}`,
+        featureData
+      );
       return response.data;
     } catch (error) {
       throw (
@@ -43,7 +63,7 @@ const businessSlice = createSlice({
   initialState: {
     BusinessCategory: [],
     loading: false,
-    loading2:false,
+    loading2: false,
     error: null,
     message: null,
   },
@@ -80,6 +100,23 @@ const businessSlice = createSlice({
         state.error = action.error.message;
         toast.error(state.error);
       })
+      .addCase(featureBussiness.pending, (state) => {
+        state.loading = true;
+        state.loading2 = true;
+      })
+      .addCase(featureBussiness.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loading2 = false;
+        state.updateBussiness = action.payload;
+        state.message = action.payload.message;
+        toast.success(action.payload.message);
+      })
+      .addCase(featureBussiness.rejected, (state, action) => {
+        state.loading = false;
+        state.loading2 = false;
+        state.error = action.error.message;
+        toast.error(state.error);
+      });
   },
 });
 
