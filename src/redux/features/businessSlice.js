@@ -57,6 +57,23 @@ export const featureBussiness = createAsyncThunk(
   }
 );
 
+export const popularBussiness = createAsyncThunk(
+  "business/popularBussiness",
+  async ({ bussinessId, popularData }) => {
+    try {
+      const response = await axiosConfig.patch(
+        `admin/popular/${bussinessId}`,
+        popularData
+      );
+      return response.data;
+    } catch (error) {
+      throw (
+        error.response?.data?.error || error.message || "Something went wrong"
+      );
+    }
+  }
+);
+
 // Slice
 const businessSlice = createSlice({
   name: "business",
@@ -112,6 +129,23 @@ const businessSlice = createSlice({
         toast.success(action.payload.message);
       })
       .addCase(featureBussiness.rejected, (state, action) => {
+        state.loading = false;
+        state.loading2 = false;
+        state.error = action.error.message;
+        toast.error(state.error);
+      })
+      .addCase(popularBussiness.pending, (state) => {
+        state.loading = true;
+        state.loading2 = true;
+      })
+      .addCase(popularBussiness.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loading2 = false;
+        state.updateBussiness = action.payload;
+        state.message = action.payload.message;
+        toast.success(action.payload.message);
+      })
+      .addCase(popularBussiness.rejected, (state, action) => {
         state.loading = false;
         state.loading2 = false;
         state.error = action.error.message;

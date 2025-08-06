@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   featureBussiness,
   getBusinessCategory,
+  popularBussiness,
   statusBussiness,
 } from "../redux/features/businessSlice";
 import FullPageLoader from "../components/Loader/Loader";
+import { toast } from "react-toastify";
 
 function Business() {
   const dispatch = useDispatch();
@@ -34,7 +36,8 @@ function Business() {
   const [hoveredBizId, setHoveredBizId] = useState(null);
   const [featureModalOpen, setFeatureModalOpen] = useState(false);
   const [selectedFeatureBiz, setSelectedFeatureBiz] = useState(null);
-
+  const [selectedPopularBiz, setSelectedPopularBiz] = useState(null);
+  const [popularModalOpen, setPopularModalOpen] = useState(false);
 
   const handleCheckboxClick = (e, biz) => {
     e.preventDefault();
@@ -94,7 +97,10 @@ function Business() {
     setFeatureModalOpen(true);
   };
 
-
+  const handlePopularToggle = (biz) => {
+    setSelectedPopularBiz(biz);
+    setPopularModalOpen(true);
+  };
 
   const TabButton = ({ id, label, activeTab, setActiveTab }) => (
     <button
@@ -151,7 +157,29 @@ function Business() {
     }
   };
 
+  const confirmPopularToggle = async () => {
+    if (!selectedPopularBiz) return;
+    const popularPayload = { popular: !selectedPopularBiz.popular };
+    try {
+      const resultAction = await dispatch(
+        popularBussiness({
+          bussinessId: selectedPopularBiz._id,
+          popularData: popularPayload,
+        })
+      );
 
+      if (popularBussiness.fulfilled.match(resultAction)) {
+        dispatch(getBusinessCategory({ keyword, page: 1, status }));
+      } else {
+        console.error("Popular update failed:", resultAction.error.message);
+      }
+    } catch (err) {
+      console.error("Popular API error:", err);
+    } finally {
+      setPopularModalOpen(false);
+      setSelectedPopularBiz(null);
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-slate-50 to-blue-50 p-6 min-h-screen">
@@ -243,7 +271,11 @@ function Business() {
                         Feature
                       </th>
                     )}
-
+                    {status && (
+                      <th className="px-6 py-3 text-left font-semibold text-slate-700 text-sm tracking-wider border-b border-slate-200">
+                        Popular
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -294,8 +326,34 @@ function Business() {
                             type="checkbox"
                             checked={biz.isFeature}
                             onClick={(e) => {
-                              e.preventDefault(); 
+                              e.preventDefault();
                               handleFeatureToggle(biz);
+                            }}
+                            readOnly
+                            className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 hover:bg-blue-50 transition-colors duration-200"
+                          />
+                        </td>
+                      )}
+                      {status && (
+                        <td className="py-4 whitespace-nowrap text-slate-600 text-center">
+                          <input
+                            type="checkbox"
+                            checked={biz.popular}
+                            onClick={(e) => {
+                              e.preventDefault();
+
+                              const popularCount = businesses.filter((b) => b.popular).length;
+
+                              if (biz.popular) {
+                                // Allow unchecking
+                                handlePopularToggle(biz);
+                              } else if (popularCount < 4) {
+                                // Allow checking if less than 4 already checked
+                                handlePopularToggle(biz);
+                              } else {
+                                // Show warning if limit exceeded
+                                toast.warning("Only 4 businesses can be marked as popular.");
+                              }
                             }}
                             readOnly
                             className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 hover:bg-blue-50 transition-colors duration-200"
@@ -608,7 +666,47 @@ function Business() {
           </div>
         )}
 
+        {popularModalOpen && selectedPopularBiz && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-in">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  {selectedPopularBiz.popular ? "Unpopular Business?" : "Popular Business?"}
+                </h3>
+                <p className="text-slate-600 mb-6">
+                  Are you sure you want to {selectedPopularBiz.popular ? "unpopular" : "popular"} <strong>{selectedPopularBiz.businessName}</strong>? <br />
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setPopularModalOpen(false);
+                      setSelectedPopularBiz(null);
+                    }}
+                    className="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors duration-200 font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmPopularToggle}
+                    className={`flex-1 px-4 py-2.5 text-white rounded-xl font-medium transition-colors duration-200 ${selectedPopularBiz.popular
+                      ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
+                      : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
+                      }`}
+                  >
+                    {selectedPopularBiz.popular ? "Unpopular" : "Popular"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }
